@@ -1,1 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Confronto CSV</title>
+</head>
+<body>
+    <div> <!--LOGO-->
+        <img src="{{ url_for('static', filename='images/logo_sirio.png') }}">
+    </div>
 
+    <br>
+
+    <div id="master"> <!--FILE-->
+
+        <form action="/upload" id="myForm" method="post" enctype="multipart/form-data">
+            <table>
+                <tr >
+                    <th></th><th></th><th><label>Controller tags</label></th>
+                </tr>
+                <tr>
+                    <th><label>Inserie il primo file CSV:</label></th>
+                    <th><input type="file" name="file1" accept=".csv" required></th>
+                    <th><input type="checkbox" name="CT1" value='CT1' onclick="checkboxUP()"></th>
+                </tr>
+                <tr id="file2">
+                    <th><label>Inserie il secondo file CSV:</label></th>
+                    <th><input type="file" name="file2" accept=".csv"></th>
+                    <th><input type="checkbox" name="CT2" value='CT2' onclick="checkboxDOWN()"></th>
+                </tr>
+            </table>
+
+            <br>
+
+            <div id="sinistra"><!--RADIOBUTTON-->
+                <div id="orizzontale">
+
+                    <div>
+                        <div><!--VerificaSegnali-->
+                            <input type="radio" name="opzione" value="opzione1" onclick="mostraTextbox1()">
+                            <label for="uno">Verifica segnali mancanti</label><br>
+                        </div>
+                        <div><!--GetSegnali-->
+                            <input type="radio" name="opzione" value="opzione2" onclick="mostraTextbox2()">
+                            <label for="due">Restituisci dei segnali</label><br>
+                        </div>
+                        <div><!--Da_aggiungere-->
+                            <input type="radio" name="opzione" value="opzione3" onclick="mostraTextbox3()">
+                            <label for="tre">Prima o poi verrà</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div id="textbox1" class="text-box">
+                            <div id="orizzontale">
+                                <div>
+                                    <input type="radio" name="scelta" value="scelta1">
+                                    <label>Primo</label><br>
+                                    <input type="radio" name="scelta" value="scelta2">
+                                    <label>Secondo</label><br>
+                                </div>
+                                <div id="verticale">
+                                    <div class="colonnaUP">
+                                        <label>Numero colonna valore File1</label>
+                                        <input type="number" min="0" value="0" name="colonna1" class="input">
+                                    </div>
+                                    <div>
+                                        <div class="tipologiaUP">
+                                            <label>Inserire la tipologia:</label>
+                                            <input type="text" id="tipologia" name="type1" placeholder="file1">
+                                        </div>
+                                    </div>
+                                    <div id="colonnaDOWN">
+                                        <label>Numero colonna valore File2</label>
+                                        <input type="number" min="0" value="0" name="colonna2" class="input">
+                                    </div>
+                                    <div>
+                                        <div id="tipologiaDOWN">
+                                            <label>Inserire la tipologia:</label>
+                                            <input type="text" id="tipologia" name="type2" placeholder="file2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="textbox2" class="text-box">
+                            <div class="verticale">
+                                <div class="tipologiaUP">
+                                    <label>Inserire la tipologia:</label>
+                                    <input type="text" id="tipologia" name="tipologia" placeholder="Type">
+                                </div>
+                                <div class="colonnaUP">
+                                    <label>Numero colonna valore</label>
+                                    <input type="number" min="0" value="0" name="colonna3" class="input">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="textbox3" class="text-box">
+                            <label for="inputText">Inserisci qualcosa:</label>
+                            <input type="text" name="bho">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <br>
+
+            <div id="orizzontale">
+                <div>
+                    <input id="bottoni" type="submit" value="Invio">
+                </div>
+                <div>
+                    <input id="bottoni" type="reset" value="Reset" onclick="refresh()">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div id="manuale">
+        <div id="verticale">
+            <h2>Manuale d'uso</h2>
+        </div>
+        <label>
+            <ul>
+                <li>Selezionare due file .csv:
+                    <ul>
+                        <li> In caso tu stia usando Logix Desiner, specifica se è un Controller Tags</li>
+                    </ul>
+                </li><br>
+                <li>Selezionare la funzione:
+                    <ul>
+                        <li> 
+                            SE VUOI CONFRONTARE DUE FILE, selezionare la priorità, ovvero quale
+                            documento è il principale, quindi in quale verrà fatta la ricerca
+                            prendendo come dati quelli del secondo file. Quindi selezionare la
+                            colonna che contiene i dati da confrontare.
+                        </li><br>
+                        <li>SE VUOI SOLAMENTE OTTENERE I DATI presenti nel primo file basta solo selezionare la colonna nel file dove sono contenuti</li><br>
+                        <li>NOTA BENE: se la spunta 'Controller Tags' è attiva, la colonna di
+                            default sarà in automatico la prima, quindi selezionare
+                            il tipo di dato da ottenere. <br>
+                            Per le colonne si inizia a contare da 0, non da 1!!<br>
+                            Il carattere '_' non è accettato nell'input.
+                        </li>
+                    </ul><br>
+                </li>
+                <li>Premere Invio per elaborare i dati e visualizzare l'output
+                    <ul>
+                        <li>In caso tu volessi ripartire da capo con l'inserimento dei dati, puoi premere Reset</li>
+                    </ul>
+                    <ul>
+                        <li>Una volta che ti trovi nell'output e torni nella Home, i dati vengono resettati automaticamente</li>
+                    </ul>
+                </li>
+        </label>
+    </div>
+    <script src="{{ url_for('static', filename='js/moovment.js') }}"></script>
+</body>
+</html>
